@@ -1,0 +1,28 @@
+<pre id="vimCodeElement"><span class="PreProc">#include</span><span class="Constant">&lt;iostream&gt;</span>
+
+<span class="Type">struct</span> Tag1 {};
+<span class="Type">struct</span> Tag2 {};
+<span class="Type">struct</span> Tag3 {};
+
+<span class="Type">template</span>&lt;<span class="Type">typename</span> Tag&gt;
+<span class="Type">struct</span> TagName;
+
+<span class="Type">template</span>&lt;&gt;
+<span class="Type">struct</span> TagName&lt;Tag1&gt;
+{
+  <span class="Type">static</span> <span class="Type">constexpr</span> <span class="Type">const</span> <span class="Type">char</span>* value = <span class="Constant">"tag1"</span>;
+};
+
+<span class="Type">template</span>&lt;&gt;
+<span class="Type">struct</span> TagName&lt;Tag2&gt;
+{
+  <span class="Type">static</span> <span class="Type">constexpr</span> <span class="Type">const</span> <span class="Type">char</span>* value = <span class="Constant">"tag2"</span>;
+};
+
+<span class="Type">int</span> <span class="Identifier">main</span>()
+{
+  <span class="Constant">std</span>::<span class="Constant">cout</span> &lt;&lt; TagName&lt;Tag1&gt;::value &lt;&lt; <span class="Constant">std</span>::<span class="Identifier">endl</span>;
+  <span class="Constant">std</span>::<span class="Constant">cout</span> &lt;&lt; TagName&lt;Tag2&gt;::value &lt;&lt; <span class="Constant">std</span>::<span class="Identifier">endl</span>;
+  <span class="Comment">//std::cout &lt;&lt; TagName&lt;Tag3&gt;::value &lt;&lt; std::endl;</span>
+}
+</pre>

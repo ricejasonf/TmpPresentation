@@ -1,0 +1,48 @@
+#!/usr/local/bin/coffee
+
+fs = require 'fs'
+jsdom = require 'jsdom'
+Promise = require 'bluebird'
+
+readFile = (filepath) ->
+  new Promise (resolve, reject) ->
+    fs.readFile filepath, 'utf8', (err, data) ->
+      console.log err if err
+      reject err if err
+      resolve data
+
+saveFile = (filepath) -> (data) ->
+  new Promise (resolve, reject) ->
+    fs.writeFile filepath, data, (err) ->
+      console.log err if err
+      reject err if err
+      resolve()
+
+getSyntaxTag = (html) ->
+  new Promise (resolve, reject) ->
+    jsdom.env
+      html: html
+      done: (err, window) ->
+        doc = window.document
+        reject err if err
+        pre = doc.getElementById('vimCodeElement')
+        if !pre
+          throw new Error()
+        temp = doc.createElement 'div'
+        temp.appendChild(pre)
+        resolve temp.innerHTML
+
+filename = process.argv[2]
+if !filename
+  console.error "Filename argument not specified."
+  process.exit(1)
+
+readFile(filename)
+.then(getSyntaxTag)
+.then(saveFile(filename))
+.then ->
+  process.exit(0)
+.catch (err) ->
+  console.error 'Tag extraction failed. :('
+  console.error err.stack
+  process.exit(1)

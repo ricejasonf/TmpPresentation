@@ -11,7 +11,7 @@
   }
 } = require '../lib/deps.coffee'
 
-Index = ReactComponent
+TemplateSyntax1 = ReactComponent
   render: ->
     div
       className: 'slide'
@@ -22,4 +22,4 @@ Index = ReactComponent
         syntax: require '../cpp/TemplateSyntax1.cpp'
 
 module.exports =
-  Index: Index
+  TemplateSyntax1: TemplateSyntax1

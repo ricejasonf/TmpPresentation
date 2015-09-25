@@ -22,7 +22,7 @@ h1.title {
   position:relative;
   top:50%;
   transform: translateY(-50%);
-  font-size: 7em;
+  font-size: 2em;
 }
 h1.title.long {
   top:40%;

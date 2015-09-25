@@ -1,8 +1,5 @@
 {
   ReactComponent
-  Route
-  Link
-  Syntax
   DOM: {
     h3
     div
@@ -11,28 +8,31 @@
   }
 } = require '../lib/deps.coffee'
 {
-  getRouter
-  Slides
-} = require './Slides.coffee'
+  SlideShow
+} = require '../lib/components/SlideShow.coffee'
 
-slide_number = 0
+frame = 0
 
 Index = ReactComponent
+  componentDidMount: ->
+    window.document.onkeydown = (e) =>
+      if (e.keyCode is 39)
+        frame++
+      else if (e.keyCode is 37)
+        frame--
+      if frame < 0
+        frame = 0
+      frame %= Slides.length
+      @forceUpdate()
+
   render: ->
-    onComponentDidMount: ->
-      body = window.document.getElementsByTagName("BODY")[0]
-      body.addEventListener 'keydown', (e) =>
-        if (e.keyCode == '39')
-          slide_number++
-        else if (e.keyCode == '37')
-          slide_number--
-        if slide_number < 0
-          slide_number = 0
-        slide_number %= Slides.length
-        @forceUpdate()
     div
       className: 'index'
-      Slides[0]()
+      div
+        style: position: 'absolute'
+        frame
+      SlideShow
+        frame: frame
 
 module.exports =
   Index: Index

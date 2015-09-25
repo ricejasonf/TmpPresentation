@@ -44,11 +44,11 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Index, React, ReactoComponent, Route, Router, ref;
+	var Index, React, ReactoComponent;
 
 	React = __webpack_require__(1);
 
-	ref = __webpack_require__(157), ReactoComponent = ref.ReactoComponent, Router = ref.Router, Route = ref.Route;
+	ReactoComponent = __webpack_require__(157).ReactoComponent;
 
 	Index = __webpack_require__(203).Index;
 
@@ -20437,11 +20437,11 @@
 /* 157 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Link, React, ReactComponent, Route, Router, Syntax, ref;
+	var DefaultRoute, Link, Navigation, React, ReactComponent, Route, Router, Syntax, ref;
 
 	React = __webpack_require__(1);
 
-	ref = __webpack_require__(158), Router = ref.Router, Route = ref.Route, Link = ref.Link;
+	ref = __webpack_require__(158), Router = ref.Router, Route = ref.Route, Link = ref.Link, Navigation = ref.Navigation, DefaultRoute = ref.DefaultRoute;
 
 	ReactComponent = __webpack_require__(201);
 
@@ -20451,6 +20451,8 @@
 	  Router: Router,
 	  Route: Route,
 	  Link: Link,
+	  DefaultRoute: DefaultRoute,
+	  Navigation: Navigation,
 	  ReactComponent: ReactComponent,
 	  DOM: React.DOM,
 	  Syntax: Syntax
@@ -20461,16 +20463,18 @@
 /* 158 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Link, React, Route, Router, ref;
+	var DefaultRoute, Link, Navigation, React, Route, Router, ref;
 
 	React = __webpack_require__(1);
 
-	ref = __webpack_require__(159), Router = ref.Router, Route = ref.Route, Link = ref.Link;
+	ref = __webpack_require__(159), Router = ref.Router, Route = ref.Route, Link = ref.Link, DefaultRoute = ref.DefaultRoute, Navigation = ref.Navigation;
 
 	module.exports = {
-	  Router: React.createFactory(Router),
-	  Route: React.createFactory(Route),
-	  Link: React.createFactory(Link)
+	  Router: Router,
+	  Route: Route,
+	  Link: Link,
+	  DefaultRoute: DefaultRoute,
+	  Navigation: Navigation
 	};
 
 
@@ -24317,14 +24321,16 @@
 
 	var ReactComponent, Syntax, div;
 
-	ReactComponent = __webpack_require__(201).ReactComponent;
+	ReactComponent = __webpack_require__(201);
 
 	div = __webpack_require__(1).DOM.div;
 
 	Syntax = ReactComponent({
 	  render: function() {
 	    return div({
-	      dangerouslySetInnerHtml: this.props.syntax
+	      dangerouslySetInnerHTML: {
+	        __html: this.props.syntax
+	      }
 	    });
 	  }
 	});
@@ -24338,19 +24344,39 @@
 /* 203 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Index, Link, ReactComponent, Route, Syntax, div, h2, li, ref, ref1, ul;
+	var Index, Link, ReactComponent, Route, Slides, Syntax, div, getRouter, h3, li, ref, ref1, ref2, slide_number, ul;
 
-	ref = __webpack_require__(157), ReactComponent = ref.ReactComponent, Route = ref.Route, Link = ref.Link, Syntax = ref.Syntax, (ref1 = ref.DOM, h2 = ref1.h2, div = ref1.div, ul = ref1.ul, li = ref1.li);
+	ref = __webpack_require__(157), ReactComponent = ref.ReactComponent, Route = ref.Route, Link = ref.Link, Syntax = ref.Syntax, (ref1 = ref.DOM, h3 = ref1.h3, div = ref1.div, ul = ref1.ul, li = ref1.li);
+
+	ref2 = __webpack_require__(204), getRouter = ref2.getRouter, Slides = ref2.Slides;
+
+	slide_number = 0;
 
 	Index = ReactComponent({
+	  componentDidMount: function() {
+	    return window.document.onkeydown = (function(_this) {
+	      return function(e) {
+	        if (e.keyCode === 39) {
+	          slide_number++;
+	        } else if (e.keyCode === 37) {
+	          slide_number--;
+	        }
+	        if (slide_number < 0) {
+	          slide_number = 0;
+	        }
+	        slide_number %= Slides.length;
+	        return _this.forceUpdate();
+	      };
+	    })(this);
+	  },
 	  render: function() {
 	    return div({
-	      className: 'slide'
-	    }, h3({
-	      className: 'title'
-	    }, 'Basic Syntax'), Syntax({
-	      file: __webpack_require__(204)
-	    }));
+	      className: 'index'
+	    }, div({
+	      style: {
+	        position: 'absolute'
+	      }
+	    }, slide_number), Slides[slide_number]());
 	  }
 	});
 
@@ -24361,9 +24387,275 @@
 
 /***/ },
 /* 204 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var DefaultRoute, Link, ReactComponent, Route, Router, Slides, Syntax, components, div, getRouter, getRoutes, h3, li, ref, ref1, slide, slides, ul,
+	  slice = [].slice;
+
+	ref = __webpack_require__(157), ReactComponent = ref.ReactComponent, Router = ref.Router, Route = ref.Route, DefaultRoute = ref.DefaultRoute, Link = ref.Link, Syntax = ref.Syntax, (ref1 = ref.DOM, h3 = ref1.h3, div = ref1.div, ul = ref1.ul, li = ref1.li);
+
+	slides = ['MainTitle', 'WhatIsTmp', 'TemplateSyntax1', 'TemplateSyntax2', 'TagDispatch1', 'TagDispatch2'];
+
+	components = {};
+
+	Slides = (function() {
+	  var j, len, results;
+	  results = [];
+	  for (j = 0, len = slides.length; j < len; j++) {
+	    slide = slides[j];
+	    results.push(components[slide] = __webpack_require__(205)("./" + slide + ".coffee")[slide]);
+	  }
+	  return results;
+	})();
+
+	getRoutes = function() {
+	  var i, j, len, results, routes;
+	  routes = [];
+	  results = [];
+	  for (slide = j = 0, len = slides.length; j < len; slide = ++j) {
+	    i = slides[slide];
+	    results.push(routes.push(Route({
+	      path: "#slide/" + i,
+	      component: components[slide]
+	    })));
+	  }
+	  return results;
+	};
+
+	getRouter = function() {
+	  return Router(null, Route.apply(null, [{
+	    path: '/'
+	  }].concat(slice.call(getRoutes()))));
+	};
+
+	module.exports = {
+	  getRouter: getRouter,
+	  components: components,
+	  Slides: Slides
+	};
+
+
+/***/ },
+/* 205 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var map = {
+		"./CppTemplate.coffee": 206,
+		"./Index.coffee": 203,
+		"./MainTitle.coffee": 207,
+		"./Slides.coffee": 204,
+		"./TagDispatch1.coffee": 208,
+		"./TagDispatch2.coffee": 210,
+		"./TemplateSyntax1.coffee": 212,
+		"./TemplateSyntax2.coffee": 214,
+		"./WhatIsTmp.coffee": 216
+	};
+	function webpackContext(req) {
+		return __webpack_require__(webpackContextResolve(req));
+	};
+	function webpackContextResolve(req) {
+		return map[req] || (function() { throw new Error("Cannot find module '" + req + "'.") }());
+	};
+	webpackContext.keys = function webpackContextKeys() {
+		return Object.keys(map);
+	};
+	webpackContext.resolve = webpackContextResolve;
+	module.exports = webpackContext;
+	webpackContext.id = 205;
+
+
+/***/ },
+/* 206 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var CppTemplate, Link, ReactComponent, Route, div, h2, li, ref, ref1, ul;
+
+	ref = __webpack_require__(157), ReactComponent = ref.ReactComponent, Route = ref.Route, Link = ref.Link, (ref1 = ref.DOM, h2 = ref1.h2, div = ref1.div, ul = ref1.ul, li = ref1.li);
+
+	CppTemplate = ReactComponent({
+	  render: function() {
+	    return div({
+	      className: 'slide'
+	    }, h2({
+	      className: 'title'
+	    }, 'C++ Template:'), ul(null, li(null, "Pure function ran at compile-time"), li(null, "Generates Code"), li(null, "Class, Function, Variable"), li(null, "All types and values are immutable")));
+	  }
+	});
+
+	module.exports = {
+	  CppTemplate: CppTemplate
+	};
+
+
+/***/ },
+/* 207 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var MainTitle, ReactComponent, div, h1, ref, ref1;
+
+	ref = __webpack_require__(157), ReactComponent = ref.ReactComponent, (ref1 = ref.DOM, h1 = ref1.h1, div = ref1.div);
+
+	MainTitle = ReactComponent({
+	  render: function() {
+	    return div({
+	      className: 'slide'
+	    }, h1({
+	      className: 'title long'
+	    }, 'C++ Template Metaprogramming'));
+	  }
+	});
+
+	module.exports = {
+	  MainTitle: MainTitle
+	};
+
+
+/***/ },
+/* 208 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Link, ReactComponent, Route, Syntax, TagDispatch1, div, h3, ref, ref1;
+
+	ref = __webpack_require__(157), ReactComponent = ref.ReactComponent, Route = ref.Route, Link = ref.Link, Syntax = ref.Syntax, (ref1 = ref.DOM, h3 = ref1.h3, div = ref1.div);
+
+	TagDispatch1 = ReactComponent({
+	  render: function() {
+	    return div({
+	      className: 'slide'
+	    }, h3({
+	      className: 'title'
+	    }, 'Tag Dispatch'), Syntax({
+	      syntax: __webpack_require__(209)
+	    }));
+	  }
+	});
+
+	module.exports = {
+	  TagDispatch1: TagDispatch1
+	};
+
+
+/***/ },
+/* 209 */
+/***/ function(module, exports) {
+
+	module.exports = "<pre id=\"vimCodeElement\"><span class=\"PreProc\">#include</span><span class=\"Constant\">&lt;iostream&gt;</span>\n\n<span class=\"Type\">struct</span> Tag1 {};\n<span class=\"Type\">struct</span> Tag2 {};\n<span class=\"Type\">struct</span> Tag3 {};\n\n<span class=\"Type\">template</span>&lt;<span class=\"Type\">typename</span> Tag&gt;\n<span class=\"Type\">struct</span> TagName;\n\n<span class=\"Type\">template</span>&lt;&gt;\n<span class=\"Type\">struct</span> TagName&lt;Tag1&gt;\n{\n  <span class=\"Type\">static</span> <span class=\"Type\">constexpr</span> <span class=\"Type\">const</span> <span class=\"Type\">char</span>* value = <span class=\"Constant\">\"tag1\"</span>;\n};\n\n<span class=\"Type\">template</span>&lt;&gt;\n<span class=\"Type\">struct</span> TagName&lt;Tag2&gt;\n{\n  <span class=\"Type\">static</span> <span class=\"Type\">constexpr</span> <span class=\"Type\">const</span> <span class=\"Type\">char</span>* value = <span class=\"Constant\">\"tag2\"</span>;\n};\n\n<span class=\"Type\">int</span> <span class=\"Identifier\">main</span>()\n{\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; TagName&lt;Tag1&gt;::value &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; TagName&lt;Tag2&gt;::value &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n  <span class=\"Comment\">//std::cout &lt;&lt; TagName&lt;Tag3&gt;::value &lt;&lt; std::endl;</span>\n}\n</pre><pre class=\"program-output\" >tag1\ntag2\n</pre>";
+
+/***/ },
+/* 210 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Link, ReactComponent, Route, Syntax, TagDispatch2, div, h3, ref, ref1;
+
+	ref = __webpack_require__(157), ReactComponent = ref.ReactComponent, Route = ref.Route, Link = ref.Link, Syntax = ref.Syntax, (ref1 = ref.DOM, h3 = ref1.h3, div = ref1.div);
+
+	TagDispatch2 = ReactComponent({
+	  render: function() {
+	    return div({
+	      className: 'slide'
+	    }, h3({
+	      className: 'title'
+	    }, 'Tag Dispatch'), Syntax({
+	      syntax: __webpack_require__(211)
+	    }));
+	  }
+	});
+
+	module.exports = {
+	  TagDispatch2: TagDispatch2
+	};
+
+
+/***/ },
+/* 211 */
 /***/ function(module, exports) {
 
 	module.exports = "<pre id=\"vimCodeElement\"><span class=\"PreProc\">#include</span><span class=\"Constant\">&lt;iostream&gt;</span>\n\n<span class=\"Type\">struct</span> Tag1 {};\n<span class=\"Type\">struct</span> Tag2 {};\n<span class=\"Type\">struct</span> Tag3 {};\n\n<span class=\"Type\">template</span>&lt;<span class=\"Type\">typename</span> Tag&gt;\n<span class=\"Type\">struct</span> TagName\n{\n  <span class=\"Type\">static</span> <span class=\"Type\">constexpr</span> <span class=\"Type\">const</span> <span class=\"Type\">char</span>* value = <span class=\"Constant\">\"default\"</span>;\n};\n\n<span class=\"Type\">template</span>&lt;&gt;\n<span class=\"Type\">struct</span> TagName&lt;Tag1&gt;\n{\n  <span class=\"Type\">static</span> <span class=\"Type\">constexpr</span> <span class=\"Type\">const</span> <span class=\"Type\">char</span>* value = <span class=\"Constant\">\"tag1\"</span>;\n};\n\n<span class=\"Type\">template</span>&lt;&gt;\n<span class=\"Type\">struct</span> TagName&lt;Tag2&gt;\n{\n  <span class=\"Type\">static</span> <span class=\"Type\">constexpr</span> <span class=\"Type\">const</span> <span class=\"Type\">char</span>* value = <span class=\"Constant\">\"tag2\"</span>;\n};\n\n<span class=\"Type\">int</span> <span class=\"Identifier\">main</span>()\n{\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; TagName&lt;Tag1&gt;::value &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; TagName&lt;Tag2&gt;::value &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; TagName&lt;Tag3&gt;::value &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n}\n</pre><pre class=\"program-output\" >tag1\ntag2\ndefault\n</pre>";
+
+/***/ },
+/* 212 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Link, ReactComponent, Route, Syntax, TemplateSyntax1, div, h3, li, ref, ref1, ul;
+
+	ref = __webpack_require__(157), ReactComponent = ref.ReactComponent, Route = ref.Route, Link = ref.Link, Syntax = ref.Syntax, (ref1 = ref.DOM, h3 = ref1.h3, div = ref1.div, ul = ref1.ul, li = ref1.li);
+
+	TemplateSyntax1 = ReactComponent({
+	  render: function() {
+	    return div({
+	      className: 'slide'
+	    }, h3({
+	      className: 'title'
+	    }, 'Template Syntax'), Syntax({
+	      syntax: __webpack_require__(213)
+	    }));
+	  }
+	});
+
+	module.exports = {
+	  TemplateSyntax1: TemplateSyntax1
+	};
+
+
+/***/ },
+/* 213 */
+/***/ function(module, exports) {
+
+	module.exports = "<pre id=\"vimCodeElement\"><span class=\"Type\">template</span>&lt;<span class=\"Type\">typename</span> T&gt;\n<span class=\"Type\">struct</span> MyStruct;\n</pre>";
+
+/***/ },
+/* 214 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Link, ReactComponent, Route, Syntax, TemplateSyntax2, div, h3, li, ref, ref1, ul;
+
+	ref = __webpack_require__(157), ReactComponent = ref.ReactComponent, Route = ref.Route, Link = ref.Link, Syntax = ref.Syntax, (ref1 = ref.DOM, h3 = ref1.h3, div = ref1.div, ul = ref1.ul, li = ref1.li);
+
+	TemplateSyntax2 = ReactComponent({
+	  render: function() {
+	    return div({
+	      className: 'slide'
+	    }, h3({
+	      className: 'title'
+	    }, 'Template Syntax'), Syntax({
+	      syntax: __webpack_require__(215)
+	    }));
+	  }
+	});
+
+	module.exports = {
+	  TemplateSyntax2: TemplateSyntax2
+	};
+
+
+/***/ },
+/* 215 */
+/***/ function(module, exports) {
+
+	module.exports = "<pre id=\"vimCodeElement\"><span class=\"Type\">template</span>&lt;<span class=\"Type\">typename</span> T&gt;\n<span class=\"Type\">struct</span> MyStruct {};\n</pre>";
+
+/***/ },
+/* 216 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Link, ReactComponent, Route, WhatIsTmp, div, h2, li, ref, ref1, ul;
+
+	ref = __webpack_require__(157), ReactComponent = ref.ReactComponent, Route = ref.Route, Link = ref.Link, (ref1 = ref.DOM, h2 = ref1.h2, div = ref1.div, ul = ref1.ul, li = ref1.li);
+
+	WhatIsTmp = ReactComponent({
+	  render: function() {
+	    return div({
+	      className: 'slide'
+	    }, h2({
+	      className: 'title'
+	    }, 'What is it?'), ul(null, li(null, "Purely functional, compile-time programming language built in to Standard C++"), li(null, "Discovered accidentally as the template system just happens to be Turing-complete")));
+	  }
+	});
+
+	module.exports = {
+	  WhatIsTmp: WhatIsTmp
+	};
+
 
 /***/ }
 /******/ ]);

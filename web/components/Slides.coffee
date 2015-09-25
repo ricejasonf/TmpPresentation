@@ -18,6 +18,8 @@ slides = [
   'WhatIsTmp'
   'TemplateSyntax1'
   'TemplateSyntax2'
+  'TagDispatch1'
+  'TagDispatch2'
 ]
 
 components = {}

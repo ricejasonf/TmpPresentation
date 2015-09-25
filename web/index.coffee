@@ -1,7 +1,4 @@
 React = require 'react'
-{
-  ReactoComponent
-} = require './lib/deps.coffee'
 { Index } = require './components/Index.coffee'
 
 window.renderMain = (id) ->

@@ -2,12 +2,9 @@ merge = require 'merge'
 {
   ReactComponent
   DOM: {
-    h3
     div
-    ul
-    li
   }
-} = require '../lib/deps.coffee'
+} = require '../deps.coffee'
 
 SlideShow = (options) -> ReactComponent
   displayName: options.displayName
@@ -20,9 +17,12 @@ SlideShow = (options) -> ReactComponent
     frame %= len
     frame
 
-  @slide: (props) ->
+  slide: () ->
     slide = options.slides[@frame()]
-    slide merge(props, @props)
+    slide.element merge(slide.props, @props)
 
   render: ->
-    @slide(@props)
+    @slide()
+
+module.exports =
+  SlideShow: SlideShow

@@ -8,6 +8,9 @@
   }
 } = require '../lib/deps.coffee'
 {
+  CppTmpSlideShow
+} = require 'CppTmpSlideShow.coffee'
+{
   SlideShow
 } = require '../lib/components/SlideShow.coffee'
 

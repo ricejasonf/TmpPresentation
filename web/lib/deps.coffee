@@ -11,6 +11,7 @@ ReactComponent = require './ReactComponent.coffee'
 {
   Syntax
 } = require './components/Syntax.coffee'
+IncrementalList = require './components/IncrementalList.coffee'
 
 module.exports =
   Router: Router
@@ -21,3 +22,4 @@ module.exports =
   ReactComponent: ReactComponent
   DOM: React.DOM
   Syntax: Syntax
+  IncrementalList: IncrementalList

@@ -1,5 +1,8 @@
 merge = require 'merge'
 {
+  ReactFactory
+} = require 'react'
+{
   ReactComponent
   DOM: {
     div
@@ -19,7 +22,10 @@ SlideShow = (options) -> ReactComponent
 
   slide: () ->
     slide = options.slides[@frame()]
-    slide.element merge(slide.props, @props)
+    if typeof slide is 'function'
+      slide @props
+    else
+      slide.element merge(slide.props, @props)
 
   render: ->
     @slide()

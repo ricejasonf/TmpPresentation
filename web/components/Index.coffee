@@ -7,12 +7,7 @@
     li
   }
 } = require '../lib/deps.coffee'
-{
-  CppTmpSlideShow
-} = require 'CppTmpSlideShow.coffee'
-{
-  SlideShow
-} = require '../lib/components/SlideShow.coffee'
+CppTmpSlideShow = require './CppTmpSlideShow.coffee'
 
 frame = 0
 
@@ -23,9 +18,6 @@ Index = ReactComponent
         frame++
       else if (e.keyCode is 37)
         frame--
-      if frame < 0
-        frame = 0
-      frame %= Slides.length
       @forceUpdate()
 
   render: ->
@@ -34,7 +26,7 @@ Index = ReactComponent
       div
         style: position: 'absolute'
         frame
-      SlideShow
+      CppTmpSlideShow
         frame: frame
 
 module.exports =

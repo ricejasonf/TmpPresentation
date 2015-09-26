@@ -8,6 +8,7 @@
     ul
     li
   }
+  IncrementalList
 } = require '../lib/deps.coffee'
 
 WhatIsTmp = ReactComponent
@@ -17,7 +18,8 @@ WhatIsTmp = ReactComponent
       h2
         className: 'title'
         'What is it?'
-      ul null,
+      IncrementalList
+        step: @props.step
         li null,
           "Purely functional, compile-time programming language built in to Standard C++"
         li null,

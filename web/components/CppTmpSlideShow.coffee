@@ -1,7 +1,7 @@
 {
   SlideShow
-  MultiStepSlide
 } = require '../lib/components/SlideShow.coffee'
+MultiStep = require '../lib/components/MultiStepSlide.coffee'
 
 { MainTitle } = require './MainTitle.coffee'
 { WhatIsTmp } = require './WhatIsTmp.coffee'
@@ -10,11 +10,11 @@
 { TagDispatch1 } = require './TagDispatch1.coffee'
 { TagDispatch2 } = require './TagDispatch2.coffee'
 
-CppTmpSlideShow = SlideShow
+module.exports = SlideShow
   displayName: 'CppTmpSlideShow'
   slides: [
-    (MultiStep MainTitle, 3)...
-    (MultiStep WhatIsTmp, 2)...
+    (MultiStep MainTitle, [1..3])...
+    (MultiStep WhatIsTmp, [1..2])...
     TemplateSyntax1
     TemplateSyntax2
     TagDispatch1

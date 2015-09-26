@@ -11,7 +11,7 @@ CppTmpSlideShow = require './CppTmpSlideShow.coffee'
 
 frame = 0
 
-Index = ReactComponent
+module.exports = ReactComponent
   componentDidMount: ->
     window.document.onkeydown = (e) =>
       if (e.keyCode is 39)
@@ -28,6 +28,3 @@ Index = ReactComponent
         frame
       CppTmpSlideShow
         frame: frame
-
-module.exports =
-  Index: Index

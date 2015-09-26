@@ -28,3 +28,10 @@ h1.title.long {
   top:40%;
 }
 
+.visible {
+  opacity: 1.0;
+  transition: opacity 0.5s;
+}
+.visible.invisible {
+  opacity: 0;
+}

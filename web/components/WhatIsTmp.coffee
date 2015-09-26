@@ -11,7 +11,7 @@
   IncrementalList
 } = require '../lib/deps.coffee'
 
-WhatIsTmp = ReactComponent
+module.exports = ReactComponent
   render: ->
     div
       className: 'slide'
@@ -24,6 +24,3 @@ WhatIsTmp = ReactComponent
           "Purely functional, compile-time programming language built in to Standard C++"
         li null,
           "Discovered accidentally as the template system just happens to be Turing-complete"
-
-module.exports =
-  WhatIsTmp: WhatIsTmp

@@ -11,7 +11,7 @@
   }
 } = require '../lib/deps.coffee'
 
-TemplateSyntax1 = ReactComponent
+module.exports = ReactComponent
   render: ->
     div
       className: 'slide'
@@ -20,6 +20,3 @@ TemplateSyntax1 = ReactComponent
         'Template Syntax'
       Syntax
         syntax: require '../cpp/TemplateSyntax1.cpp'
-
-module.exports =
-  TemplateSyntax1: TemplateSyntax1

@@ -10,7 +10,7 @@
   }
 } = require '../lib/deps.coffee'
 
-CppTemplate = ReactComponent
+module.exports = ReactComponent
   render: ->
     div
       className: 'slide'
@@ -26,6 +26,3 @@ CppTemplate = ReactComponent
           "Class, Function, Variable"
         li null,
           "All types and values are immutable"
-
-module.exports =
-  CppTemplate: CppTemplate

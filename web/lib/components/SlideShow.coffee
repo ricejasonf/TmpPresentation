@@ -9,7 +9,7 @@ merge = require 'merge'
   }
 } = require '../deps.coffee'
 
-SlideShow = (options) -> ReactComponent
+module.exports = (options) -> ReactComponent
   displayName: options.displayName
 
   frame: ->
@@ -29,6 +29,3 @@ SlideShow = (options) -> ReactComponent
 
   render: ->
     @slide()
-
-module.exports =
-  SlideShow: SlideShow

@@ -2,17 +2,21 @@
   ReactComponent
   DOM: {
     h1
+    small
     div
   }
 } = require '../lib/deps.coffee'
 
-MainTitle = ReactComponent
+module.exports = ReactComponent
   render: ->
     div
       className: 'slide'
       h1
         className: 'title long'
         'C++ Template Metaprogramming'
-
-module.exports =
-  MainTitle: MainTitle
+        div 
+          className: [
+            'visible'
+            'invisible' unless @props.step > 1
+          ].join ' '
+          small null, 'Part 2: The real Part 1'

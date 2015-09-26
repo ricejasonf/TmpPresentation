@@ -9,7 +9,7 @@
   }
 } = require '../lib/deps.coffee'
 
-TagDispatch1 = ReactComponent
+module.exports = ReactComponent
   render: ->
     div
       className: 'slide'
@@ -18,6 +18,3 @@ TagDispatch1 = ReactComponent
         'Tag Dispatch'
       Syntax
         syntax: require '../cpp/TagDispatch1.cpp'
-
-module.exports =
-  TagDispatch1: TagDispatch1

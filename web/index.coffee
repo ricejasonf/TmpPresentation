@@ -1,5 +1,5 @@
 React = require 'react'
-{ Index } = require './components/Index.coffee'
+Index = require './components/Index.coffee'
 
 window.renderMain = (id) ->
   React.render Index(),

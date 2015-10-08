@@ -20435,7 +20435,7 @@
 /* 157 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var CppTmpSlideShow, ReactComponent, div, frame, h3, initKeyboard, initScroll, li, ref, ref1, scroll_pos, ul;
+	var CppTmpSlideShow, ReactComponent, clearScroll, div, frame, h3, initKeyboard, initScroll, li, ref, ref1, scroll_pos, ul;
 
 	ref = __webpack_require__(158), ReactComponent = ref.ReactComponent, (ref1 = ref.DOM, h3 = ref1.h3, div = ref1.div, ul = ref1.ul, li = ref1.li);
 
@@ -20445,13 +20445,20 @@
 
 	scroll_pos = 0;
 
+	clearScroll = function() {
+	  return window.setTimeout(function() {
+	    window.scrollTo(0, 0);
+	    return scroll_pos = 0;
+	  }, 50);
+	};
+
 	initKeyboard = function(update) {
 	  return window.document.onkeydown = function(e) {
 	    if (e.keyCode === 39) {
-	      window.scrollTo(0, 0);
+	      clearScroll();
 	      frame++;
 	    } else if (e.keyCode === 37) {
-	      window.scrollTo(0, 0);
+	      clearScroll();
 	      frame--;
 	    }
 	    return update();
@@ -20463,10 +20470,12 @@
 	  window.scrollTo(0, 0);
 	  doc = window.document;
 	  return doc.onscroll = function(e) {
-	    var max, s;
-	    max = Math.max(doc.body.scrollHeight, doc.body.offsetHeight, doc.documentElement.clientHeight, doc.documentElement.scrollHeight, doc.documentElement.offsetHeight) - window.innerHeight;
-	    s = doc.documentElement.scrollTop != null ? doc.documentElement.scrollTop : doc.body.scrollTop;
-	    return scroll_pos = max > 0 ? Math.floor(s / max * 100) : 'moo';
+	    return window.setTimeout(function() {
+	      var max, s;
+	      max = Math.max(doc.body.scrollHeight, doc.body.offsetHeight, doc.documentElement.clientHeight, doc.documentElement.scrollHeight, doc.documentElement.offsetHeight) - window.innerHeight;
+	      s = doc.documentElement.scrollTop != null ? doc.documentElement.scrollTop : doc.body.scrollTop;
+	      return scroll_pos = max > 0 ? Math.floor(s / max * 100) : 0;
+	    }, 50);
 	  };
 	};
 
@@ -20478,8 +20487,7 @@
 	        return _this.forceUpdate();
 	      };
 	    })(this);
-	    initKeyboard(update);
-	    return initScroll(update);
+	    return initKeyboard(update);
 	  },
 	  render: function() {
 	    return div({
@@ -20491,7 +20499,7 @@
 	        zIndex: 1000,
 	        fontSize: '0.5em'
 	      }
-	    }, frame, " | ", "scroll: " + scroll_pos + "%"), div({
+	    }, frame), div({
 	      className: 'slide-container'
 	    }, CppTmpSlideShow({
 	      frame: frame
@@ -22749,7 +22757,7 @@
 /* 181 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var HanaMaybe, HanaOnlyWhen, HanaTitle, MainTitle, MultiStep, SlideShow, SyntaxSlide, TagDispatch1, TagDispatch2, TemplateSyntax1, TemplateSyntax2, VariadicTemplates1, WhatIsTmp,
+	var FakeFunctor, HanaMaybe, HanaOnlyWhen, HanaSfinae, HanaTitle, MainTitle, MultiStep, SlideShow, SyntaxSlide, TagDispatch1, TagDispatch2, TemplateSyntax1, TemplateSyntax2, VariadicTemplates1, WhatIsTmp,
 	  slice = [].slice;
 
 	SlideShow = __webpack_require__(182);
@@ -22777,18 +22785,28 @@
 
 	HanaTitle = __webpack_require__(197);
 
-	HanaMaybe = SyntaxSlide({
-	  title: "Maybe It's a Monad",
+	FakeFunctor = SyntaxSlide({
+	  title: "Faking the Functor",
 	  syntax: __webpack_require__(198)
 	});
 
-	HanaOnlyWhen = SyntaxSlide({
-	  title: "OnlyWhen It's a Monad",
+	HanaMaybe = SyntaxSlide({
+	  title: "Maybe It's a Monad",
 	  syntax: __webpack_require__(199)
 	});
 
+	HanaOnlyWhen = SyntaxSlide({
+	  title: "Only When...",
+	  syntax: __webpack_require__(200)
+	});
+
+	HanaSfinae = SyntaxSlide({
+	  title: "SFINAE!... God Bless You!",
+	  syntax: __webpack_require__(201)
+	});
+
 	module.exports = SlideShow({
-	  slides: slice.call(MultiStep(MainTitle, [1, 2])).concat(slice.call(MultiStep(WhatIsTmp, [0, 1, 2])), [TemplateSyntax1], [TemplateSyntax2], [TagDispatch1], [TagDispatch2], [VariadicTemplates1], slice.call(MultiStep(HanaTitle, [1, 2])), [HanaMaybe], [HanaOnlyWhen])
+	  slides: slice.call(MultiStep(MainTitle, [1, 2])).concat(slice.call(MultiStep(WhatIsTmp, [0, 1, 2])), [TemplateSyntax1], [TemplateSyntax2], [TagDispatch1], [TagDispatch2], [VariadicTemplates1], [FakeFunctor], slice.call(MultiStep(HanaTitle, [1, 2])), [HanaMaybe], [HanaOnlyWhen], [HanaSfinae])
 	});
 
 
@@ -23208,7 +23226,7 @@
 /* 196 */
 /***/ function(module, exports) {
 
-	module.exports = "<pre id=\"vimCodeElement\"><span class=\"PreProc\">#include</span><span class=\"Constant\">&lt;iostream&gt;</span>\n\n<span class=\"Type\">template</span>&lt;<span class=\"Type\">int</span>...&gt;\n<span class=\"Type\">struct</span> Sum\n{\n  <span class=\"Type\">static</span> <span class=\"Type\">constexpr</span> <span class=\"Type\">int</span> value = <span class=\"Constant\">0</span>;\n};\n\n<span class=\"Type\">template</span>&lt;<span class=\"Type\">int</span> a, <span class=\"Type\">int</span>... b&gt;\n<span class=\"Type\">struct</span> Sum&lt;a, b...&gt;\n{\n  <span class=\"Type\">static</span> <span class=\"Type\">constexpr</span> <span class=\"Type\">int</span> value = a + Sum&lt;b...&gt;::value;\n};\n\n<span class=\"Type\">int</span> <span class=\"Identifier\">main</span>()\n{\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; Sum&lt;<span class=\"Constant\">1</span>&gt;::value &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; Sum&lt;<span class=\"Constant\">1</span>, <span class=\"Constant\">1</span>&gt;::value &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; Sum&lt;<span class=\"Constant\">1</span>, <span class=\"Constant\">1</span>, <span class=\"Constant\">2</span>&gt;::value &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; Sum&lt;<span class=\"Constant\">1</span>, <span class=\"Constant\">1</span>, <span class=\"Constant\">2</span>, <span class=\"Constant\">3</span>&gt;::value &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; Sum&lt;<span class=\"Constant\">1</span>, <span class=\"Constant\">1</span>, <span class=\"Constant\">2</span>, <span class=\"Constant\">3</span>, <span class=\"Constant\">5</span>&gt;::value &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n}\n</pre><pre class=\"program-output\" >1\n2\n4\n7\n12\n</pre>";
+	module.exports = "<pre id=\"vimCodeElement\"><span class=\"PreProc\">#include</span><span class=\"Constant\">&lt;iostream&gt;</span>\n\n<span class=\"Type\">template</span>&lt;<span class=\"Type\">int</span>...&gt;\n<span class=\"Type\">struct</span> Sum\n{\n  <span class=\"Type\">static</span> <span class=\"Type\">constexpr</span> <span class=\"Type\">int</span> value = <span class=\"Constant\">0</span>;\n};\n\n<span class=\"Type\">template</span>&lt;<span class=\"Type\">int</span> a, <span class=\"Type\">int</span>... b&gt;\n<span class=\"Type\">struct</span> Sum&lt;a, b...&gt;\n{\n  <span class=\"Type\">static</span> <span class=\"Type\">constexpr</span> <span class=\"Type\">int</span> value = a + Sum&lt;b...&gt;::value;\n};\n\n<span class=\"Type\">int</span> <span class=\"Identifier\">main</span>()\n{\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; Sum&lt;&gt;::value &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; Sum&lt;<span class=\"Constant\">0</span>&gt;::value &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; Sum&lt;<span class=\"Constant\">1</span>&gt;::value &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; Sum&lt;<span class=\"Constant\">1</span>, <span class=\"Constant\">1</span>&gt;::value &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; Sum&lt;<span class=\"Constant\">1</span>, <span class=\"Constant\">1</span>, <span class=\"Constant\">2</span>&gt;::value &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; Sum&lt;<span class=\"Constant\">1</span>, <span class=\"Constant\">1</span>, <span class=\"Constant\">2</span>, <span class=\"Constant\">3</span>&gt;::value &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; Sum&lt;<span class=\"Constant\">1</span>, <span class=\"Constant\">1</span>, <span class=\"Constant\">2</span>, <span class=\"Constant\">3</span>, <span class=\"Constant\">5</span>&gt;::value &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n}\n</pre><pre class=\"program-output\" >0\n0\n1\n2\n4\n7\n12\n</pre>";
 
 /***/ },
 /* 197 */
@@ -23235,13 +23253,25 @@
 /* 198 */
 /***/ function(module, exports) {
 
-	module.exports = "<pre id=\"vimCodeElement\"><span class=\"Comment\">/*</span>\n<span class=\"Comment\">@copyright Louis Dionne 2015</span>\n<span class=\"Comment\">Distributed under the Boost Software License, Version 1.0.</span>\n<span class=\"Comment\">(See accompanying file LICENSE.md or copy at <a href=\"http://boost.org/LICENSE_1_0.txt)\">http://boost.org/LICENSE_1_0.txt)</a></span>\n<span class=\"Comment\">*/</span>\n<span class=\"PreProc\">#include </span><span class=\"Constant\">&lt;boost/hana/functional/placeholder.hpp&gt;</span>\n<span class=\"PreProc\">#include </span><span class=\"Constant\">&lt;boost/hana/optional.hpp&gt;</span>\n\n<span class=\"Type\">namespace</span> hana = <span class=\"Constant\">boost</span>::hanaz;\n\n<span class=\"Statement\">static_assert</span>(\n  <span class=\"Identifier\">hana</span>::<span class=\"Identifier\">maybe</span>(<span class=\"Constant\">'x'</span>, <span class=\"Identifier\">hana</span>::_ + <span class=\"Constant\">1</span>, <span class=\"Identifier\">hana</span>::<span class=\"Identifier\">just</span>(<span class=\"Constant\">1</span>))\n    == <span class=\"Constant\">2</span>, <span class=\"Constant\">\"\"</span> );\n\n<span class=\"Statement\">static_assert</span>(\n  <span class=\"Identifier\">hana</span>::<span class=\"Identifier\">maybe</span>(<span class=\"Constant\">'x'</span>, <span class=\"Identifier\">hana</span>::_ + <span class=\"Constant\">1</span>, <span class=\"Identifier\">hana</span>::nothing)\n    == <span class=\"Constant\">'x'</span>, <span class=\"Constant\">\"\"</span>);\n\n<span class=\"Type\">int</span> <span class=\"Identifier\">main</span>() { }\n</pre>";
+	module.exports = "<pre id=\"vimCodeElement\"><span class=\"PreProc\">#include</span><span class=\"Constant\">&lt;iostream&gt;</span>\n\n<span class=\"Comment\">//obviously incomplete</span>\n\n<span class=\"Type\">template</span>&lt;<span class=\"Type\">int</span> v&gt;\n<span class=\"Type\">struct</span> Functor\n{\n  <span class=\"Type\">static</span> <span class=\"Type\">constexpr</span> <span class=\"Type\">int</span> value = v;\n\n  <span class=\"Type\">template</span>&lt;<span class=\"Type\">typename</span> Fn&gt;\n  <span class=\"Type\">static</span> <span class=\"Type\">constexpr</span> <span class=\"Type\">auto</span> <span class=\"Identifier\">fmap</span>(Fn fn) -&gt; <span class=\"Type\">decltype</span>(<span class=\"Identifier\">fn</span>(v))\n  {\n    <span class=\"Comment\">//return Functor&lt;decltype(fn(v))&gt;{};</span>\n    <span class=\"Statement\">return</span> <span class=\"Identifier\">fn</span>(v);\n  }\n};\n\n<span class=\"Type\">struct</span> Even\n{\n  <span class=\"Type\">template</span>&lt;<span class=\"Type\">typename</span> T&gt;\n  <span class=\"Type\">constexpr</span> <span class=\"Type\">bool</span> <span class=\"Statement\">operator</span>()(T value)\n  {\n    <span class=\"Statement\">return</span> (value % <span class=\"Constant\">2</span> == <span class=\"Constant\">0</span>);\n  }\n}\n<span class=\"Type\">constexpr</span> even = Even{};\n\n<span class=\"Type\">int</span> <span class=\"Identifier\">main</span>()\n{\n  <span class=\"Statement\">static_assert</span>(\n      Functor&lt;<span class=\"Constant\">4</span> + <span class=\"Constant\">3</span>&gt;::<span class=\"Identifier\">fmap</span>(even) == (Functor&lt;<span class=\"Constant\">4</span>&gt;::<span class=\"Identifier\">fmap</span>(even) &amp;&amp; Functor&lt;<span class=\"Constant\">3</span>&gt;::<span class=\"Identifier\">fmap</span>(even))\n  , <span class=\"Constant\">\"\"</span>);\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">boolalpha</span>;\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; Functor&lt;<span class=\"Constant\">4</span> + <span class=\"Constant\">3</span>&gt;::<span class=\"Identifier\">fmap</span>(even);\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; Functor&lt;<span class=\"Constant\">4</span>&gt;::<span class=\"Identifier\">fmap</span>(even);\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; Functor&lt;<span class=\"Constant\">3</span>&gt;::<span class=\"Identifier\">fmap</span>(even);\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; (Functor&lt;<span class=\"Constant\">4</span>&gt;::<span class=\"Identifier\">fmap</span>(even) &amp;&amp; Functor&lt;<span class=\"Constant\">3</span>&gt;::<span class=\"Identifier\">fmap</span>(even));\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n}\n</pre><pre class=\"program-output\" >false\ntrue\nfalse\nfalse\n</pre>";
 
 /***/ },
 /* 199 */
 /***/ function(module, exports) {
 
+	module.exports = "<pre id=\"vimCodeElement\"><span class=\"Comment\">/*</span>\n<span class=\"Comment\">@copyright Louis Dionne 2015</span>\n<span class=\"Comment\">Distributed under the Boost Software License, Version 1.0.</span>\n<span class=\"Comment\">(See accompanying file LICENSE.md or copy at <a href=\"http://boost.org/LICENSE_1_0.txt)\">http://boost.org/LICENSE_1_0.txt)</a></span>\n<span class=\"Comment\">*/</span>\n<span class=\"PreProc\">#include </span><span class=\"Constant\">&lt;boost/hana/functional/placeholder.hpp&gt;</span>\n<span class=\"PreProc\">#include </span><span class=\"Constant\">&lt;boost/hana/optional.hpp&gt;</span>\n\n<span class=\"Type\">namespace</span> hana = <span class=\"Constant\">boost</span>::hana;\n\n<span class=\"Statement\">static_assert</span>(\n  <span class=\"Identifier\">hana</span>::<span class=\"Identifier\">maybe</span>(<span class=\"Constant\">'x'</span>, <span class=\"Identifier\">hana</span>::_ + <span class=\"Constant\">1</span>, <span class=\"Identifier\">hana</span>::<span class=\"Identifier\">just</span>(<span class=\"Constant\">1</span>))\n    == <span class=\"Constant\">2</span>, <span class=\"Constant\">\"\"</span>);\n\n<span class=\"Statement\">static_assert</span>(\n  <span class=\"Identifier\">hana</span>::<span class=\"Identifier\">maybe</span>(<span class=\"Constant\">'x'</span>, <span class=\"Identifier\">hana</span>::_ + <span class=\"Constant\">1</span>, <span class=\"Identifier\">hana</span>::nothing)\n    == <span class=\"Constant\">'x'</span>, <span class=\"Constant\">\"\"</span>);\n\n<span class=\"Type\">int</span> <span class=\"Identifier\">main</span>() { }\n</pre>";
+
+/***/ },
+/* 200 */
+/***/ function(module, exports) {
+
 	module.exports = "<pre id=\"vimCodeElement\"><span class=\"Comment\">/*</span>\n<span class=\"Comment\">@copyright Louis Dionne 2015</span>\n<span class=\"Comment\">Distributed under the Boost Software License, Version 1.0.</span>\n<span class=\"Comment\">(See accompanying file LICENSE.md or copy at <a href=\"http://boost.org/LICENSE_1_0.txt)\">http://boost.org/LICENSE_1_0.txt)</a></span>\n<span class=\"Comment\">*/</span>\n<span class=\"PreProc\">#include </span><span class=\"Constant\">&lt;boost/hana/assert.hpp&gt;</span>\n<span class=\"PreProc\">#include </span><span class=\"Constant\">&lt;boost/hana/div.hpp&gt;</span>\n<span class=\"PreProc\">#include </span><span class=\"Constant\">&lt;boost/hana/equal.hpp&gt;</span>\n<span class=\"PreProc\">#include </span><span class=\"Constant\">&lt;boost/hana/integral_constant.hpp&gt;</span>\n<span class=\"PreProc\">#include </span><span class=\"Constant\">&lt;boost/hana/mod.hpp&gt;</span>\n<span class=\"PreProc\">#include </span><span class=\"Constant\">&lt;boost/hana/optional.hpp&gt;</span>\n\n<span class=\"Type\">namespace</span> hana = <span class=\"Constant\">boost</span>::hana;\n\n<span class=\"Type\">auto</span> even = [](<span class=\"Type\">auto</span> x) {\n  <span class=\"Statement\">return</span> x % <span class=\"Identifier\">hana</span>::int_c&lt;<span class=\"Constant\">2</span>&gt; == <span class=\"Identifier\">hana</span>::int_c&lt;<span class=\"Constant\">0</span>&gt;;\n};\n\n<span class=\"Type\">auto</span> half = [](<span class=\"Type\">auto</span> x) {\n  <span class=\"Statement\">return</span> x / <span class=\"Identifier\">hana</span>::int_c&lt;<span class=\"Constant\">2</span>&gt;;\n};\n\n<span class=\"Identifier\">BOOST_HANA_CONSTANT_CHECK</span>(\n    <span class=\"Identifier\">hana</span>::<span class=\"Identifier\">only_when</span>(even, half, <span class=\"Identifier\">hana</span>::int_c&lt;<span class=\"Constant\">4</span>&gt;)\n      == <span class=\"Identifier\">hana</span>::<span class=\"Identifier\">just</span>(<span class=\"Identifier\">hana</span>::int_c&lt;<span class=\"Constant\">2</span>&gt;));\n\n<span class=\"Identifier\">BOOST_HANA_CONSTANT_CHECK</span>(\n  <span class=\"Identifier\">hana</span>::<span class=\"Identifier\">only_when</span>(even, half, <span class=\"Identifier\">hana</span>::int_c&lt;<span class=\"Constant\">3</span>&gt;)\n    == <span class=\"Identifier\">hana</span>::nothing);\n\n<span class=\"Type\">int</span> <span class=\"Identifier\">main</span>() { }\n</pre>";
+
+/***/ },
+/* 201 */
+/***/ function(module, exports) {
+
+	module.exports = "<pre id=\"vimCodeElement\"><span class=\"Comment\">/*</span>\n<span class=\"Comment\">@copyright Louis Dionne 2015</span>\n<span class=\"Comment\">Distributed under the Boost Software License, Version 1.0.</span>\n<span class=\"Comment\">(See accompanying file LICENSE.md or copy at <a href=\"http://boost.org/LICENSE_1_0.txt)\">http://boost.org/LICENSE_1_0.txt)</a></span>\n<span class=\"Comment\">*/</span>\n<span class=\"PreProc\">#include </span><span class=\"Constant\">&lt;boost/hana/assert.hpp&gt;</span>\n<span class=\"PreProc\">#include </span><span class=\"Constant\">&lt;boost/hana/config.hpp&gt;</span>\n<span class=\"PreProc\">#include </span><span class=\"Constant\">&lt;boost/hana/equal.hpp&gt;</span>\n<span class=\"PreProc\">#include </span><span class=\"Constant\">&lt;boost/hana/optional.hpp&gt;</span>\n\n<span class=\"Type\">namespace</span> hana = <span class=\"Constant\">boost</span>::hana;\n\n<span class=\"Type\">int</span> <span class=\"Identifier\">main</span>()\n{\n\n  BOOST_HANA_CONSTEXPR_LAMBDA <span class=\"Type\">auto</span> incr =\n    [](<span class=\"Type\">auto</span> x) -&gt; <span class=\"Type\">decltype</span>(x + <span class=\"Constant\">1</span>) {\n      <span class=\"Statement\">return</span> x + <span class=\"Constant\">1</span>;\n    };\n\n  <span class=\"Identifier\">BOOST_HANA_CONSTEXPR_CHECK</span>(\n    <span class=\"Identifier\">hana</span>::<span class=\"Identifier\">sfinae</span>(incr)(<span class=\"Constant\">1</span>) == <span class=\"Identifier\">hana</span>::<span class=\"Identifier\">just</span>(<span class=\"Constant\">2</span>));\n\n  <span class=\"Type\">struct</span> invalid { };\n\n  <span class=\"Identifier\">BOOST_HANA_CONSTANT_CHECK</span>(\n    <span class=\"Identifier\">hana</span>::<span class=\"Identifier\">sfinae</span>(incr)(invalid{}) == <span class=\"Identifier\">hana</span>::nothing);\n\n}\n</pre>";
 
 /***/ }
 /******/ ]);

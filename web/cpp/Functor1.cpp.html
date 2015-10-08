@@ -1,0 +1,43 @@
+<pre id="vimCodeElement"><span class="PreProc">#include</span><span class="Constant">&lt;iostream&gt;</span>
+
+<span class="Comment">//obviously incomplete</span>
+
+<span class="Type">template</span>&lt;<span class="Type">int</span> v&gt;
+<span class="Type">struct</span> Functor
+{
+  <span class="Type">static</span> <span class="Type">constexpr</span> <span class="Type">int</span> value = v;
+
+  <span class="Type">template</span>&lt;<span class="Type">typename</span> Fn&gt;
+  <span class="Type">static</span> <span class="Type">constexpr</span> <span class="Type">auto</span> <span class="Identifier">fmap</span>(Fn fn) -&gt; <span class="Type">decltype</span>(<span class="Identifier">fn</span>(v))
+  {
+    <span class="Comment">//return Functor&lt;decltype(fn(v))&gt;{};</span>
+    <span class="Statement">return</span> <span class="Identifier">fn</span>(v);
+  }
+};
+
+<span class="Type">struct</span> Even
+{
+  <span class="Type">template</span>&lt;<span class="Type">typename</span> T&gt;
+  <span class="Type">constexpr</span> <span class="Type">bool</span> <span class="Statement">operator</span>()(T value)
+  {
+    <span class="Statement">return</span> (value % <span class="Constant">2</span> == <span class="Constant">0</span>);
+  }
+}
+<span class="Type">constexpr</span> even = Even{};
+
+<span class="Type">int</span> <span class="Identifier">main</span>()
+{
+  <span class="Statement">static_assert</span>(
+      Functor&lt;<span class="Constant">4</span> + <span class="Constant">3</span>&gt;::<span class="Identifier">fmap</span>(even) == (Functor&lt;<span class="Constant">4</span>&gt;::<span class="Identifier">fmap</span>(even) &amp;&amp; Functor&lt;<span class="Constant">3</span>&gt;::<span class="Identifier">fmap</span>(even))
+  , <span class="Constant">""</span>);
+  <span class="Constant">std</span>::<span class="Constant">cout</span> &lt;&lt; <span class="Constant">std</span>::<span class="Identifier">boolalpha</span>;
+  <span class="Constant">std</span>::<span class="Constant">cout</span> &lt;&lt; Functor&lt;<span class="Constant">4</span> + <span class="Constant">3</span>&gt;::<span class="Identifier">fmap</span>(even);
+  <span class="Constant">std</span>::<span class="Constant">cout</span> &lt;&lt; <span class="Constant">std</span>::<span class="Identifier">endl</span>;
+  <span class="Constant">std</span>::<span class="Constant">cout</span> &lt;&lt; Functor&lt;<span class="Constant">4</span>&gt;::<span class="Identifier">fmap</span>(even);
+  <span class="Constant">std</span>::<span class="Constant">cout</span> &lt;&lt; <span class="Constant">std</span>::<span class="Identifier">endl</span>;
+  <span class="Constant">std</span>::<span class="Constant">cout</span> &lt;&lt; Functor&lt;<span class="Constant">3</span>&gt;::<span class="Identifier">fmap</span>(even);
+  <span class="Constant">std</span>::<span class="Constant">cout</span> &lt;&lt; <span class="Constant">std</span>::<span class="Identifier">endl</span>;
+  <span class="Constant">std</span>::<span class="Constant">cout</span> &lt;&lt; (Functor&lt;<span class="Constant">4</span>&gt;::<span class="Identifier">fmap</span>(even) &amp;&amp; Functor&lt;<span class="Constant">3</span>&gt;::<span class="Identifier">fmap</span>(even));
+  <span class="Constant">std</span>::<span class="Constant">cout</span> &lt;&lt; <span class="Constant">std</span>::<span class="Identifier">endl</span>;
+}
+</pre>

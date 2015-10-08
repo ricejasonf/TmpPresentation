@@ -1,0 +1,30 @@
+<pre id="vimCodeElement"><span class="Comment">/*</span>
+<span class="Comment">@copyright Louis Dionne 2015</span>
+<span class="Comment">Distributed under the Boost Software License, Version 1.0.</span>
+<span class="Comment">(See accompanying file LICENSE.md or copy at <a href="http://boost.org/LICENSE_1_0.txt)">http://boost.org/LICENSE_1_0.txt)</a></span>
+<span class="Comment">*/</span>
+<span class="PreProc">#include </span><span class="Constant">&lt;boost/hana/assert.hpp&gt;</span>
+<span class="PreProc">#include </span><span class="Constant">&lt;boost/hana/config.hpp&gt;</span>
+<span class="PreProc">#include </span><span class="Constant">&lt;boost/hana/equal.hpp&gt;</span>
+<span class="PreProc">#include </span><span class="Constant">&lt;boost/hana/optional.hpp&gt;</span>
+
+<span class="Type">namespace</span> hana = <span class="Constant">boost</span>::hana;
+
+<span class="Type">int</span> <span class="Identifier">main</span>()
+{
+
+  BOOST_HANA_CONSTEXPR_LAMBDA <span class="Type">auto</span> incr =
+    [](<span class="Type">auto</span> x) -&gt; <span class="Type">decltype</span>(x + <span class="Constant">1</span>) {
+      <span class="Statement">return</span> x + <span class="Constant">1</span>;
+    };
+
+  <span class="Identifier">BOOST_HANA_CONSTEXPR_CHECK</span>(
+    <span class="Identifier">hana</span>::<span class="Identifier">sfinae</span>(incr)(<span class="Constant">1</span>) == <span class="Identifier">hana</span>::<span class="Identifier">just</span>(<span class="Constant">2</span>));
+
+  <span class="Type">struct</span> invalid { };
+
+  <span class="Identifier">BOOST_HANA_CONSTANT_CHECK</span>(
+    <span class="Identifier">hana</span>::<span class="Identifier">sfinae</span>(incr)(invalid{}) == <span class="Identifier">hana</span>::nothing);
+
+}
+</pre>

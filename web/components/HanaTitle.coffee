@@ -13,10 +13,10 @@ module.exports = ReactComponent
       className: 'slide'
       h1
         className: 'title'
-        'C++ Template Metaprogramming'
-        div 
+        'Boost Hana'
+        div
           className: [
             'visible'
             'invisible' unless @props.step > 1
           ].join ' '
-          small null, 'Part 2: The real Part 1'
+          small null, 'Your standard library for metaprogramming'

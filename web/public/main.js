@@ -20435,37 +20435,67 @@
 /* 157 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var CppTmpSlideShow, ReactComponent, div, frame, h3, li, ref, ref1, ul;
+	var CppTmpSlideShow, ReactComponent, div, frame, h3, initKeyboard, initScroll, li, ref, ref1, scroll_pos, ul;
 
 	ref = __webpack_require__(158), ReactComponent = ref.ReactComponent, (ref1 = ref.DOM, h3 = ref1.h3, div = ref1.div, ul = ref1.ul, li = ref1.li);
 
-	CppTmpSlideShow = __webpack_require__(180);
+	CppTmpSlideShow = __webpack_require__(181);
 
 	frame = 0;
 
+	scroll_pos = 0;
+
+	initKeyboard = function(update) {
+	  return window.document.onkeydown = function(e) {
+	    if (e.keyCode === 39) {
+	      window.scrollTo(0, 0);
+	      frame++;
+	    } else if (e.keyCode === 37) {
+	      window.scrollTo(0, 0);
+	      frame--;
+	    }
+	    return update();
+	  };
+	};
+
+	initScroll = function(update) {
+	  var doc;
+	  window.scrollTo(0, 0);
+	  doc = window.document;
+	  return doc.onscroll = function(e) {
+	    var max, s;
+	    max = Math.max(doc.body.scrollHeight, doc.body.offsetHeight, doc.documentElement.clientHeight, doc.documentElement.scrollHeight, doc.documentElement.offsetHeight) - window.innerHeight;
+	    s = doc.documentElement.scrollTop != null ? doc.documentElement.scrollTop : doc.body.scrollTop;
+	    return scroll_pos = max > 0 ? Math.floor(s / max * 100) : 'moo';
+	  };
+	};
+
 	module.exports = ReactComponent({
 	  componentDidMount: function() {
-	    return window.document.onkeydown = (function(_this) {
-	      return function(e) {
-	        if (e.keyCode === 39) {
-	          frame++;
-	        } else if (e.keyCode === 37) {
-	          frame--;
-	        }
+	    var update;
+	    update = (function(_this) {
+	      return function() {
 	        return _this.forceUpdate();
 	      };
 	    })(this);
+	    initKeyboard(update);
+	    return initScroll(update);
 	  },
 	  render: function() {
 	    return div({
 	      className: 'index'
 	    }, div({
 	      style: {
-	        position: 'absolute'
+	        backgroundColor: 'black',
+	        position: 'fixed',
+	        zIndex: 1000,
+	        fontSize: '0.5em'
 	      }
-	    }, frame), CppTmpSlideShow({
+	    }, frame, " | ", "scroll: " + scroll_pos + "%"), div({
+	      className: 'slide-container'
+	    }, CppTmpSlideShow({
 	      frame: frame
-	    }));
+	    })));
 	  }
 	});
 
@@ -20474,7 +20504,7 @@
 /* 158 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var IncrementalList, React, ReactComponent, Syntax;
+	var IncrementalList, React, ReactComponent, Syntax, SyntaxSlide;
 
 	React = __webpack_require__(1);
 
@@ -20482,14 +20512,17 @@
 
 	ReactComponent = __webpack_require__(177);
 
-	Syntax = __webpack_require__(178).Syntax;
+	Syntax = __webpack_require__(178);
 
-	IncrementalList = __webpack_require__(179);
+	SyntaxSlide = __webpack_require__(179);
+
+	IncrementalList = __webpack_require__(180);
 
 	module.exports = {
 	  ReactComponent: ReactComponent,
 	  DOM: React.DOM,
 	  Syntax: Syntax,
+	  SyntaxSlide: SyntaxSlide,
 	  IncrementalList: IncrementalList
 	};
 
@@ -22634,13 +22667,13 @@
 /* 178 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ReactComponent, Syntax, div;
+	var ReactComponent, div;
 
 	ReactComponent = __webpack_require__(177);
 
 	div = __webpack_require__(1).DOM.div;
 
-	Syntax = ReactComponent({
+	module.exports = ReactComponent({
 	  render: function() {
 	    return div({
 	      dangerouslySetInnerHTML: {
@@ -22650,13 +22683,36 @@
 	  }
 	});
 
-	module.exports = {
-	  Syntax: Syntax
+
+/***/ },
+/* 179 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ReactComponent, Syntax, div, h3, ref;
+
+	ref = __webpack_require__(1).DOM, h3 = ref.h3, div = ref.div;
+
+	ReactComponent = __webpack_require__(177);
+
+	Syntax = __webpack_require__(178);
+
+	module.exports = function(options) {
+	  return ReactComponent({
+	    render: function() {
+	      return div({
+	        className: 'slide'
+	      }, h3({
+	        className: 'title'
+	      }, options.title), Syntax({
+	        syntax: options.syntax
+	      }));
+	    }
+	  });
 	};
 
 
 /***/ },
-/* 179 */
+/* 180 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var ReactComponent, cloneWithProps, div, ref, ref1, ref2, ul,
@@ -22690,40 +22746,59 @@
 
 
 /***/ },
-/* 180 */
+/* 181 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var MainTitle, MultiStep, SlideShow, TagDispatch1, TagDispatch2, TemplateSyntax1, TemplateSyntax2, WhatIsTmp,
+	var HanaMaybe, HanaOnlyWhen, HanaTitle, MainTitle, MultiStep, SlideShow, SyntaxSlide, TagDispatch1, TagDispatch2, TemplateSyntax1, TemplateSyntax2, VariadicTemplates1, WhatIsTmp,
 	  slice = [].slice;
 
-	SlideShow = __webpack_require__(181);
+	SlideShow = __webpack_require__(182);
 
-	MultiStep = __webpack_require__(184);
+	MultiStep = __webpack_require__(185);
 
-	MainTitle = __webpack_require__(185);
+	SyntaxSlide = __webpack_require__(179);
 
-	WhatIsTmp = __webpack_require__(186);
+	MainTitle = __webpack_require__(186);
 
-	TemplateSyntax1 = __webpack_require__(187);
+	WhatIsTmp = __webpack_require__(187);
 
-	TemplateSyntax2 = __webpack_require__(189);
+	TemplateSyntax1 = __webpack_require__(188);
 
-	TagDispatch1 = __webpack_require__(191);
+	TemplateSyntax2 = __webpack_require__(190);
 
-	TagDispatch2 = __webpack_require__(193);
+	TagDispatch1 = __webpack_require__(192);
+
+	TagDispatch2 = __webpack_require__(194);
+
+	VariadicTemplates1 = SyntaxSlide({
+	  title: 'Variadic Templates',
+	  syntax: __webpack_require__(196)
+	});
+
+	HanaTitle = __webpack_require__(197);
+
+	HanaMaybe = SyntaxSlide({
+	  title: "Maybe It's a Monad",
+	  syntax: __webpack_require__(198)
+	});
+
+	HanaOnlyWhen = SyntaxSlide({
+	  title: "OnlyWhen It's a Monad",
+	  syntax: __webpack_require__(199)
+	});
 
 	module.exports = SlideShow({
-	  slides: slice.call(MultiStep(MainTitle, [1, 2])).concat(slice.call(MultiStep(WhatIsTmp, [0, 1, 2])), [TemplateSyntax1], [TemplateSyntax2], [TagDispatch1], [TagDispatch2])
+	  slides: slice.call(MultiStep(MainTitle, [1, 2])).concat(slice.call(MultiStep(WhatIsTmp, [0, 1, 2])), [TemplateSyntax1], [TemplateSyntax2], [TagDispatch1], [TagDispatch2], [VariadicTemplates1], slice.call(MultiStep(HanaTitle, [1, 2])), [HanaMaybe], [HanaOnlyWhen])
 	});
 
 
 /***/ },
-/* 181 */
+/* 182 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var ReactComponent, ReactFactory, div, merge, ref, ref1;
 
-	merge = __webpack_require__(182);
+	merge = __webpack_require__(183);
 
 	ReactFactory = __webpack_require__(1).ReactFactory;
 
@@ -22759,7 +22834,7 @@
 
 
 /***/ },
-/* 182 */
+/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/*!
@@ -22937,10 +23012,10 @@
 		}
 
 	})(typeof module === 'object' && module && typeof module.exports === 'object' && module.exports);
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(183)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(184)(module)))
 
 /***/ },
-/* 183 */
+/* 184 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -22956,7 +23031,7 @@
 
 
 /***/ },
-/* 184 */
+/* 185 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var ReactComponent, div, ref, ref1;
@@ -22980,7 +23055,7 @@
 
 
 /***/ },
-/* 185 */
+/* 186 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var ReactComponent, div, h1, ref, ref1, small;
@@ -22992,7 +23067,7 @@
 	    return div({
 	      className: 'slide'
 	    }, h1({
-	      className: 'title long'
+	      className: 'title'
 	    }, 'C++ Template Metaprogramming', div({
 	      className: ['visible', !(this.props.step > 1) ? 'invisible' : void 0].join(' ')
 	    }, small(null, 'Part 2: The real Part 1'))));
@@ -23001,7 +23076,7 @@
 
 
 /***/ },
-/* 186 */
+/* 187 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var IncrementalList, Link, ReactComponent, Route, div, h2, li, ref, ref1, ul;
@@ -23022,7 +23097,7 @@
 
 
 /***/ },
-/* 187 */
+/* 188 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Link, ReactComponent, Route, Syntax, div, h3, li, ref, ref1, ul;
@@ -23036,20 +23111,20 @@
 	    }, h3({
 	      className: 'title'
 	    }, 'Template Syntax'), Syntax({
-	      syntax: __webpack_require__(188)
+	      syntax: __webpack_require__(189)
 	    }));
 	  }
 	});
 
 
 /***/ },
-/* 188 */
+/* 189 */
 /***/ function(module, exports) {
 
 	module.exports = "<pre id=\"vimCodeElement\"><span class=\"Type\">template</span>&lt;<span class=\"Type\">typename</span> T&gt;\n<span class=\"Type\">struct</span> MyStruct;\n</pre>";
 
 /***/ },
-/* 189 */
+/* 190 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Link, ReactComponent, Route, Syntax, div, h3, li, ref, ref1, ul;
@@ -23063,20 +23138,20 @@
 	    }, h3({
 	      className: 'title'
 	    }, 'Template Syntax'), Syntax({
-	      syntax: __webpack_require__(190)
+	      syntax: __webpack_require__(191)
 	    }));
 	  }
 	});
 
 
 /***/ },
-/* 190 */
+/* 191 */
 /***/ function(module, exports) {
 
 	module.exports = "<pre id=\"vimCodeElement\"><span class=\"Type\">template</span>&lt;<span class=\"Type\">typename</span> T&gt;\n<span class=\"Type\">struct</span> MyStruct {};\n</pre>";
 
 /***/ },
-/* 191 */
+/* 192 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Link, ReactComponent, Route, Syntax, div, h3, ref, ref1;
@@ -23090,20 +23165,20 @@
 	    }, h3({
 	      className: 'title'
 	    }, 'Tag Dispatch'), Syntax({
-	      syntax: __webpack_require__(192)
+	      syntax: __webpack_require__(193)
 	    }));
 	  }
 	});
 
 
 /***/ },
-/* 192 */
+/* 193 */
 /***/ function(module, exports) {
 
 	module.exports = "<pre id=\"vimCodeElement\"><span class=\"PreProc\">#include</span><span class=\"Constant\">&lt;iostream&gt;</span>\n\n<span class=\"Type\">struct</span> Tag1 {};\n<span class=\"Type\">struct</span> Tag2 {};\n<span class=\"Type\">struct</span> Tag3 {};\n\n<span class=\"Type\">template</span>&lt;<span class=\"Type\">typename</span> Tag&gt;\n<span class=\"Type\">struct</span> TagName;\n\n<span class=\"Type\">template</span>&lt;&gt;\n<span class=\"Type\">struct</span> TagName&lt;Tag1&gt;\n{\n  <span class=\"Type\">static</span> <span class=\"Type\">constexpr</span> <span class=\"Type\">const</span> <span class=\"Type\">char</span>* value = <span class=\"Constant\">\"tag1\"</span>;\n};\n\n<span class=\"Type\">template</span>&lt;&gt;\n<span class=\"Type\">struct</span> TagName&lt;Tag2&gt;\n{\n  <span class=\"Type\">static</span> <span class=\"Type\">constexpr</span> <span class=\"Type\">const</span> <span class=\"Type\">char</span>* value = <span class=\"Constant\">\"tag2\"</span>;\n};\n\n<span class=\"Type\">int</span> <span class=\"Identifier\">main</span>()\n{\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; TagName&lt;Tag1&gt;::value &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; TagName&lt;Tag2&gt;::value &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n  <span class=\"Comment\">//std::cout &lt;&lt; TagName&lt;Tag3&gt;::value &lt;&lt; std::endl;</span>\n}\n</pre><pre class=\"program-output\" >tag1\ntag2\n</pre>";
 
 /***/ },
-/* 193 */
+/* 194 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Link, ReactComponent, Route, Syntax, div, h3, ref, ref1;
@@ -23117,17 +23192,56 @@
 	    }, h3({
 	      className: 'title'
 	    }, 'Tag Dispatch'), Syntax({
-	      syntax: __webpack_require__(194)
+	      syntax: __webpack_require__(195)
 	    }));
 	  }
 	});
 
 
 /***/ },
-/* 194 */
+/* 195 */
 /***/ function(module, exports) {
 
 	module.exports = "<pre id=\"vimCodeElement\"><span class=\"PreProc\">#include</span><span class=\"Constant\">&lt;iostream&gt;</span>\n\n<span class=\"Type\">struct</span> Tag1 {};\n<span class=\"Type\">struct</span> Tag2 {};\n<span class=\"Type\">struct</span> Tag3 {};\n\n<span class=\"Type\">template</span>&lt;<span class=\"Type\">typename</span> Tag&gt;\n<span class=\"Type\">struct</span> TagName\n{\n  <span class=\"Type\">static</span> <span class=\"Type\">constexpr</span> <span class=\"Type\">const</span> <span class=\"Type\">char</span>* value = <span class=\"Constant\">\"default\"</span>;\n};\n\n<span class=\"Type\">template</span>&lt;&gt;\n<span class=\"Type\">struct</span> TagName&lt;Tag1&gt;\n{\n  <span class=\"Type\">static</span> <span class=\"Type\">constexpr</span> <span class=\"Type\">const</span> <span class=\"Type\">char</span>* value = <span class=\"Constant\">\"tag1\"</span>;\n};\n\n<span class=\"Type\">template</span>&lt;&gt;\n<span class=\"Type\">struct</span> TagName&lt;Tag2&gt;\n{\n  <span class=\"Type\">static</span> <span class=\"Type\">constexpr</span> <span class=\"Type\">const</span> <span class=\"Type\">char</span>* value = <span class=\"Constant\">\"tag2\"</span>;\n};\n\n<span class=\"Type\">int</span> <span class=\"Identifier\">main</span>()\n{\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; TagName&lt;Tag1&gt;::value &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; TagName&lt;Tag2&gt;::value &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; TagName&lt;Tag3&gt;::value &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n}\n</pre><pre class=\"program-output\" >tag1\ntag2\ndefault\n</pre>";
+
+/***/ },
+/* 196 */
+/***/ function(module, exports) {
+
+	module.exports = "<pre id=\"vimCodeElement\"><span class=\"PreProc\">#include</span><span class=\"Constant\">&lt;iostream&gt;</span>\n\n<span class=\"Type\">template</span>&lt;<span class=\"Type\">int</span>...&gt;\n<span class=\"Type\">struct</span> Sum\n{\n  <span class=\"Type\">static</span> <span class=\"Type\">constexpr</span> <span class=\"Type\">int</span> value = <span class=\"Constant\">0</span>;\n};\n\n<span class=\"Type\">template</span>&lt;<span class=\"Type\">int</span> a, <span class=\"Type\">int</span>... b&gt;\n<span class=\"Type\">struct</span> Sum&lt;a, b...&gt;\n{\n  <span class=\"Type\">static</span> <span class=\"Type\">constexpr</span> <span class=\"Type\">int</span> value = a + Sum&lt;b...&gt;::value;\n};\n\n<span class=\"Type\">int</span> <span class=\"Identifier\">main</span>()\n{\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; Sum&lt;<span class=\"Constant\">1</span>&gt;::value &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; Sum&lt;<span class=\"Constant\">1</span>, <span class=\"Constant\">1</span>&gt;::value &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; Sum&lt;<span class=\"Constant\">1</span>, <span class=\"Constant\">1</span>, <span class=\"Constant\">2</span>&gt;::value &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; Sum&lt;<span class=\"Constant\">1</span>, <span class=\"Constant\">1</span>, <span class=\"Constant\">2</span>, <span class=\"Constant\">3</span>&gt;::value &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n  <span class=\"Constant\">std</span>::<span class=\"Constant\">cout</span> &lt;&lt; Sum&lt;<span class=\"Constant\">1</span>, <span class=\"Constant\">1</span>, <span class=\"Constant\">2</span>, <span class=\"Constant\">3</span>, <span class=\"Constant\">5</span>&gt;::value &lt;&lt; <span class=\"Constant\">std</span>::<span class=\"Identifier\">endl</span>;\n}\n</pre><pre class=\"program-output\" >1\n2\n4\n7\n12\n</pre>";
+
+/***/ },
+/* 197 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ReactComponent, div, h1, ref, ref1, small;
+
+	ref = __webpack_require__(158), ReactComponent = ref.ReactComponent, (ref1 = ref.DOM, h1 = ref1.h1, small = ref1.small, div = ref1.div);
+
+	module.exports = ReactComponent({
+	  render: function() {
+	    return div({
+	      className: 'slide'
+	    }, h1({
+	      className: 'title'
+	    }, 'Boost Hana', div({
+	      className: ['visible', !(this.props.step > 1) ? 'invisible' : void 0].join(' ')
+	    }, small(null, 'Your standard library for metaprogramming'))));
+	  }
+	});
+
+
+/***/ },
+/* 198 */
+/***/ function(module, exports) {
+
+	module.exports = "<pre id=\"vimCodeElement\"><span class=\"Comment\">/*</span>\n<span class=\"Comment\">@copyright Louis Dionne 2015</span>\n<span class=\"Comment\">Distributed under the Boost Software License, Version 1.0.</span>\n<span class=\"Comment\">(See accompanying file LICENSE.md or copy at <a href=\"http://boost.org/LICENSE_1_0.txt)\">http://boost.org/LICENSE_1_0.txt)</a></span>\n<span class=\"Comment\">*/</span>\n<span class=\"PreProc\">#include </span><span class=\"Constant\">&lt;boost/hana/functional/placeholder.hpp&gt;</span>\n<span class=\"PreProc\">#include </span><span class=\"Constant\">&lt;boost/hana/optional.hpp&gt;</span>\n\n<span class=\"Type\">namespace</span> hana = <span class=\"Constant\">boost</span>::hanaz;\n\n<span class=\"Statement\">static_assert</span>(\n  <span class=\"Identifier\">hana</span>::<span class=\"Identifier\">maybe</span>(<span class=\"Constant\">'x'</span>, <span class=\"Identifier\">hana</span>::_ + <span class=\"Constant\">1</span>, <span class=\"Identifier\">hana</span>::<span class=\"Identifier\">just</span>(<span class=\"Constant\">1</span>))\n    == <span class=\"Constant\">2</span>, <span class=\"Constant\">\"\"</span> );\n\n<span class=\"Statement\">static_assert</span>(\n  <span class=\"Identifier\">hana</span>::<span class=\"Identifier\">maybe</span>(<span class=\"Constant\">'x'</span>, <span class=\"Identifier\">hana</span>::_ + <span class=\"Constant\">1</span>, <span class=\"Identifier\">hana</span>::nothing)\n    == <span class=\"Constant\">'x'</span>, <span class=\"Constant\">\"\"</span>);\n\n<span class=\"Type\">int</span> <span class=\"Identifier\">main</span>() { }\n</pre>";
+
+/***/ },
+/* 199 */
+/***/ function(module, exports) {
+
+	module.exports = "<pre id=\"vimCodeElement\"><span class=\"Comment\">/*</span>\n<span class=\"Comment\">@copyright Louis Dionne 2015</span>\n<span class=\"Comment\">Distributed under the Boost Software License, Version 1.0.</span>\n<span class=\"Comment\">(See accompanying file LICENSE.md or copy at <a href=\"http://boost.org/LICENSE_1_0.txt)\">http://boost.org/LICENSE_1_0.txt)</a></span>\n<span class=\"Comment\">*/</span>\n<span class=\"PreProc\">#include </span><span class=\"Constant\">&lt;boost/hana/assert.hpp&gt;</span>\n<span class=\"PreProc\">#include </span><span class=\"Constant\">&lt;boost/hana/div.hpp&gt;</span>\n<span class=\"PreProc\">#include </span><span class=\"Constant\">&lt;boost/hana/equal.hpp&gt;</span>\n<span class=\"PreProc\">#include </span><span class=\"Constant\">&lt;boost/hana/integral_constant.hpp&gt;</span>\n<span class=\"PreProc\">#include </span><span class=\"Constant\">&lt;boost/hana/mod.hpp&gt;</span>\n<span class=\"PreProc\">#include </span><span class=\"Constant\">&lt;boost/hana/optional.hpp&gt;</span>\n\n<span class=\"Type\">namespace</span> hana = <span class=\"Constant\">boost</span>::hana;\n\n<span class=\"Type\">auto</span> even = [](<span class=\"Type\">auto</span> x) {\n  <span class=\"Statement\">return</span> x % <span class=\"Identifier\">hana</span>::int_c&lt;<span class=\"Constant\">2</span>&gt; == <span class=\"Identifier\">hana</span>::int_c&lt;<span class=\"Constant\">0</span>&gt;;\n};\n\n<span class=\"Type\">auto</span> half = [](<span class=\"Type\">auto</span> x) {\n  <span class=\"Statement\">return</span> x / <span class=\"Identifier\">hana</span>::int_c&lt;<span class=\"Constant\">2</span>&gt;;\n};\n\n<span class=\"Identifier\">BOOST_HANA_CONSTANT_CHECK</span>(\n    <span class=\"Identifier\">hana</span>::<span class=\"Identifier\">only_when</span>(even, half, <span class=\"Identifier\">hana</span>::int_c&lt;<span class=\"Constant\">4</span>&gt;)\n      == <span class=\"Identifier\">hana</span>::<span class=\"Identifier\">just</span>(<span class=\"Identifier\">hana</span>::int_c&lt;<span class=\"Constant\">2</span>&gt;));\n\n<span class=\"Identifier\">BOOST_HANA_CONSTANT_CHECK</span>(\n  <span class=\"Identifier\">hana</span>::<span class=\"Identifier\">only_when</span>(even, half, <span class=\"Identifier\">hana</span>::int_c&lt;<span class=\"Constant\">3</span>&gt;)\n    == <span class=\"Identifier\">hana</span>::nothing);\n\n<span class=\"Type\">int</span> <span class=\"Identifier\">main</span>() { }\n</pre>";
 
 /***/ }
 /******/ ]);

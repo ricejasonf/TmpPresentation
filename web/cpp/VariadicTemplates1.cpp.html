@@ -1,0 +1,25 @@
+<pre id="vimCodeElement"><span class="PreProc">#include</span><span class="Constant">&lt;iostream&gt;</span>
+
+<span class="Type">template</span>&lt;<span class="Type">int</span>...&gt;
+<span class="Type">struct</span> Sum
+{
+  <span class="Type">static</span> <span class="Type">constexpr</span> <span class="Type">int</span> value = <span class="Constant">0</span>;
+};
+
+<span class="Type">template</span>&lt;<span class="Type">int</span> a, <span class="Type">int</span>... b&gt;
+<span class="Type">struct</span> Sum&lt;a, b...&gt;
+{
+  <span class="Type">static</span> <span class="Type">constexpr</span> <span class="Type">int</span> value = a + Sum&lt;b...&gt;::value;
+};
+
+<span class="Type">int</span> <span class="Identifier">main</span>()
+{
+  <span class="Constant">std</span>::<span class="Constant">cout</span> &lt;&lt; Sum&lt;&gt;::value &lt;&lt; <span class="Constant">std</span>::<span class="Identifier">endl</span>;
+  <span class="Constant">std</span>::<span class="Constant">cout</span> &lt;&lt; Sum&lt;<span class="Constant">0</span>&gt;::value &lt;&lt; <span class="Constant">std</span>::<span class="Identifier">endl</span>;
+  <span class="Constant">std</span>::<span class="Constant">cout</span> &lt;&lt; Sum&lt;<span class="Constant">1</span>&gt;::value &lt;&lt; <span class="Constant">std</span>::<span class="Identifier">endl</span>;
+  <span class="Constant">std</span>::<span class="Constant">cout</span> &lt;&lt; Sum&lt;<span class="Constant">1</span>, <span class="Constant">1</span>&gt;::value &lt;&lt; <span class="Constant">std</span>::<span class="Identifier">endl</span>;
+  <span class="Constant">std</span>::<span class="Constant">cout</span> &lt;&lt; Sum&lt;<span class="Constant">1</span>, <span class="Constant">1</span>, <span class="Constant">2</span>&gt;::value &lt;&lt; <span class="Constant">std</span>::<span class="Identifier">endl</span>;
+  <span class="Constant">std</span>::<span class="Constant">cout</span> &lt;&lt; Sum&lt;<span class="Constant">1</span>, <span class="Constant">1</span>, <span class="Constant">2</span>, <span class="Constant">3</span>&gt;::value &lt;&lt; <span class="Constant">std</span>::<span class="Identifier">endl</span>;
+  <span class="Constant">std</span>::<span class="Constant">cout</span> &lt;&lt; Sum&lt;<span class="Constant">1</span>, <span class="Constant">1</span>, <span class="Constant">2</span>, <span class="Constant">3</span>, <span class="Constant">5</span>&gt;::value &lt;&lt; <span class="Constant">std</span>::<span class="Identifier">endl</span>;
+}
+</pre>
